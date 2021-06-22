@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ghost.AppTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2020-11-22T12:24:18" hostname="tylers-mbp.internal.usyd.edu.au" time="4.408">
+  <properties/>
+  <testcase name="constructorTest()" classname="ghost.AppTest" time="0.034"/>
+  <testcase name="testKeyDown()" classname="ghost.AppTest" time="1.106"/>
+  <testcase name="testKeyLeft()" classname="ghost.AppTest" time="0.545"/>
+  <testcase name="testDebug()" classname="ghost.AppTest" time="0.547"/>
+  <testcase name="testKeyUp()" classname="ghost.AppTest" time="0.545"/>
+  <testcase name="testReset()" classname="ghost.AppTest" time="0.547"/>
+  <testcase name="testKeyRight()" classname="ghost.AppTest" time="0.544"/>
+  <testcase name="testBadKey()" classname="ghost.AppTest" time="0.535"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[java.lang.NullPointerException
+	at ghost.Pacman.isDead(Pacman.java:214)
+	at ghost.GameObject.finished(GameObject.java:153)
+	at ghost.App.draw(App.java:56)
+	at processing.core.PApplet.handleDraw(PApplet.java:2426)
+	at processing.awt.PSurfaceAWT$12.callDraw(PSurfaceAWT.java:1557)
+	at processing.core.PSurfaceNone$AnimationThread.run(PSurfaceNone.java:316)
+java.lang.NullPointerException
+	at ghost.Pacman.isDead(Pacman.java:214)
+	at ghost.GameObject.finished(GameObject.java:153)
+	at ghost.App.draw(App.java:56)
+	at processing.core.PApplet.handleDraw(PApplet.java:2426)
+	at processing.awt.PSurfaceAWT$12.callDraw(PSurfaceAWT.java:1557)
+	at processing.core.PSurfaceNone$AnimationThread.run(PSurfaceNone.java:316)
+java.lang.NullPointerException
+	at ghost.Pacman.isDead(Pacman.java:214)
+	at ghost.GameObject.finished(GameObject.java:153)
+	at ghost.App.draw(App.java:56)
+	at processing.core.PApplet.handleDraw(PApplet.java:2426)
+	at processing.awt.PSurfaceAWT$12.callDraw(PSurfaceAWT.java:1557)
+	at processing.core.PSurfaceNone$AnimationThread.run(PSurfaceNone.java:316)
+java.lang.NullPointerException
+	at ghost.Pacman.isDead(Pacman.java:214)
+	at ghost.GameObject.finished(GameObject.java:153)
+	at ghost.App.draw(App.java:56)
+	at processing.core.PApplet.handleDraw(PApplet.java:2426)
+	at processing.awt.PSurfaceAWT$12.callDraw(PSurfaceAWT.java:1557)
+	at processing.core.PSurfaceNone$AnimationThread.run(PSurfaceNone.java:316)
+java.lang.NullPointerException
+	at ghost.Pacman.isDead(Pacman.java:214)
+	at ghost.GameObject.finished(GameObject.java:153)
+	at ghost.App.draw(App.java:56)
+	at processing.core.PApplet.handleDraw(PApplet.java:2426)
+	at processing.awt.PSurfaceAWT$12.callDraw(PSurfaceAWT.java:1557)
+	at processing.core.PSurfaceNone$AnimationThread.run(PSurfaceNone.java:316)
+java.lang.NullPointerException
+	at ghost.Pacman.validMove(Pacman.java:151)
+	at ghost.Pacman.move(Pacman.java:134)
+	at ghost.App.draw(App.java:59)
+	at processing.core.PApplet.handleDraw(PApplet.java:2426)
+	at processing.awt.PSurfaceAWT$12.callDraw(PSurfaceAWT.java:1557)
+	at processing.core.PSurfaceNone$AnimationThread.run(PSurfaceNone.java:316)
+]]></system-err>
+</testsuite>

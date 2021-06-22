@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pacman.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Refined_Assignment</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">Pacman.java</span></div><h1>Pacman.java</h1><pre class="source lang-java linenums">/*
+    Author: Tyler Gan
+    Date: 21/11/20
+    INFO1113 Assignment 2: Waka Waka
+
+    This is the Pacman class, where methods related to Waka are stored.
+*/
+
+package ghost;
+
+import java.util.List;
+
+import processing.core.PImage;
+import processing.core.PVector;
+
+public class Pacman extends GameObject{
+    private int lives;
+    private int fruitCount;
+
+<span class="fc" id="L20">    private String currMove = &quot;left&quot;;</span>
+<span class="fc" id="L21">    private boolean turning = false;</span>
+
+    private PImage[] images;
+<span class="fc" id="L24">    private int[] state = new int[2];</span>
+    private double indexState;
+
+    private PVector turnDirec;
+
+    private List&lt;GameObject&gt; ghosts;
+
+    /**
+     * This method is the constructor of the Pacman class. Note that his first state (state[0]) will always be the closed-mouth state.
+     */
+<span class="fc" id="L34">    public Pacman() {</span>
+<span class="fc" id="L35">        this.state[0] = 0;</span>
+<span class="fc" id="L36">        this.indexState = 0;</span>
+<span class="fc" id="L37">    }</span>
+
+    /**
+     * This method sets the ghosts to the ghosts variable of this class.
+     * @param ghosts a List of ghosts.
+     */
+    public void setGhosts(List&lt;GameObject&gt; ghosts) {
+<span class="fc" id="L44">        this.ghosts = ghosts;</span>
+<span class="fc" id="L45">    }</span>
+
+    /**
+     * This method returns a PImage relative to Pacman's specific state.
+     */
+    @Override
+    public PImage getImg() {
+<span class="fc" id="L52">        return images[getState()];</span>
+    }
+    
+    /**
+     * This method sets an array of images to Pacman's images variable.
+     * @param images an array of Pacman states.
+     */
+    public void setImg(PImage[] images) {
+<span class="fc" id="L60">        this.images = images;</span>
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * This method will increment the index by a small amount, allowing Pacman to experience an &quot;animation-like&quot; transition between states by delaying each transition.
+     */
+    public void animate() {
+<span class="fc" id="L67">        this.indexState += 0.18;</span>
+<span class="fc" id="L68">    }</span>
+
+    /**
+     * This method will return Pacman's current state (open-close mouth) as it constatly fluctuates between 0 and 1 (through the use of the modulo).
+     * @return the state of Pacman.
+     */
+    public int getState() {
+<span class="fc" id="L75">        int newIndex = (int) this.indexState % 2;</span>
+<span class="fc" id="L76">        return state[newIndex];</span>
+    }
+
+    /**
+     * This sets Pacman's second state depending on the direction he is facing.
+     * @param x the state depending on which direction he is facing.
+     */
+    public void setState(int x) {
+<span class="fc" id="L84">        state[1] = x;</span>
+<span class="fc" id="L85">    }</span>
+
+    /**
+     * This method returns Pacman's number of lives.
+     * @return lives
+     */
+    public int getLives() {
+<span class="fc" id="L92">        return lives;</span>
+    }
+
+    /**
+     * This method will set the number of lives Pacman has and is used in the MapParse() class.
+     * @param lives the number of lives.
+     */
+    public void setLives(int lives) {
+<span class="fc" id="L100">        this.lives = lives;</span>
+<span class="fc" id="L101">    }</span>
+
+    /**
+     * This method will set the number of fruits found in the map configuraiton.
+     * @param fruitCount the number of fruits.
+     */
+    public void setFruitCount(int fruitCount) {
+<span class="fc" id="L108">        this.fruitCount = fruitCount;</span>
+<span class="fc" id="L109">    }</span>
+
+    /**
+     * This method will move Pacman in a particular direction; it works with the checkDirection() method to determine the validity of the move and whether it can move in that 
+     * direction or not.
+     */
+    public void move() {
+<span class="fc" id="L116">        int state = 0;</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (currMove.equals(&quot;left&quot;)) {</span>
+<span class="fc" id="L118">            this.turnDirec = new PVector(-1, 0);</span>
+<span class="fc" id="L119">            state = 4;</span>
+
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        } else if (currMove.equals(&quot;up&quot;)) {</span>
+<span class="fc" id="L122">            this.turnDirec = new PVector(0, -1);</span>
+<span class="fc" id="L123">            state = 1;</span>
+    
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        } else if (currMove.equals(&quot;right&quot;)) {</span>
+<span class="fc" id="L126">            this.turnDirec = new PVector(1, 0);</span>
+<span class="fc" id="L127">            state = 3;</span>
+    
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        } else if (currMove.equals(&quot;down&quot;)) {</span>
+<span class="fc" id="L130">            this.turnDirec = new PVector(0, 1);</span>
+<span class="fc" id="L131">            state = 2;</span>
+        }
+
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (validMove()) {</span>
+<span class="fc" id="L135">            this.pos.add(this.vel);</span>
+            
+<span class="fc bfc" id="L137" title="All 2 branches covered.">            if (turning) { //only turn if we are actually turning (not while going straight)</span>
+<span class="fc" id="L138">                this.setState(state);</span>
+<span class="fc" id="L139">                this.turning = false;</span>
+            }
+        }
+<span class="fc" id="L142">    }</span>
+
+    /**
+     * This method does multiple checks. It checks for whethter we are interacting with a fruit, super fruit and ant-power up. Additionally, it checks whether we are able to move 
+     * in the direction of our desired input. If not, the move is stored and conducted until the next possible opening is found, unless another input is given or we cannot move in
+     * the specified direction because the straight-line direction and the turning direction is blocked.
+     * @return true or false.
+     */
+    public boolean validMove() {
+<span class="fc" id="L151">        PVector futureTurningPos = new PVector(pos.x + turnDirec.x, pos.y + turnDirec.y);</span>
+<span class="fc" id="L152">        PVector futureForwardPos = new PVector(pos.x + vel.x, pos.y + vel.y);</span>
+
+        //CELL CHECKS ==============================================
+<span class="fc bfc" id="L155" title="All 4 branches covered.">        if (pos.x % 1 == 0 &amp;&amp; pos.y % 1 == 0) { //check for fruits in our current position.</span>
+<span class="fc" id="L156">            Tile tile = map[(int) pos.y][(int) pos.x];</span>
+<span class="fc bfc" id="L157" title="All 4 branches covered.">            if (tile.isFruit() || tile.isSuperFruit()) {</span>
+<span class="fc" id="L158">                this.fruitCount--;</span>
+<span class="fc" id="L159">                tile.fruitFunction();</span>
+
+<span class="fc bfc" id="L161" title="All 2 branches covered.">                if (fruitCount == 0) {</span>
+<span class="fc" id="L162">                    gameOver = win = true;</span>
+                }
+
+<span class="fc bfc" id="L165" title="All 2 branches covered.">                if (tile.isSuperFruit()) {</span>
+<span class="fc" id="L166">                    tile.superFruitFunction();</span>
+                }
+            }
+
+<span class="fc bfc" id="L170" title="All 2 branches covered.">            if (tile.isAntiPower()) {</span>
+<span class="fc" id="L171">                tile.antiPowerFunction();</span>
+            }
+        }
+
+        //MOVEMENT CHECKS ==============================================
+<span class="fc bfc" id="L176" title="All 4 branches covered.">        if (vel.x * 16/speed + turnDirec.x == 0 &amp;&amp; vel.y * 16/speed + turnDirec.y == 0) { //check if we are turning a full 180 degrees (gets rid of delays in case of 180 degree turns)</span>
+<span class="fc" id="L177">            vel = new PVector(turnDirec.x/16f * speed, turnDirec.y/16f * speed);</span>
+<span class="fc" id="L178">            this.turning = true;</span>
+<span class="fc" id="L179">            return true;</span>
+        }
+
+<span class="fc bfc" id="L182" title="All 4 branches covered.">        if (futureTurningPos.x % 1 != 0 || futureTurningPos.y % 1 != 0) { //only check for whole number indexes</span>
+<span class="fc" id="L183">            return true;</span>
+        }
+
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        if (map[(int) futureTurningPos.y][(int) futureTurningPos.x].isWall()) { //check if the position we are turning to is a wall</span>
+<span class="fc bfc" id="L187" title="All 4 branches covered.">            if ((map[(int) futureForwardPos.y][(int) futureForwardPos.x + 1].isWall() &amp;&amp; vel.x == 1/16f * speed) || //if we are moving right, check future (x+1,y) = wall</span>
+<span class="fc bfc" id="L188" title="All 4 branches covered.">                (map[(int) futureForwardPos.y + 1][(int) futureForwardPos.x].isWall() &amp;&amp; vel.y == 1/16f * speed) || //if we are moving down, check future (x,y+1) = wall</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">                (map[(int) futureForwardPos.y][(int) futureForwardPos.x].isWall())) //otherwise, just check whether future (x,y) = wall</span>
+            {
+<span class="fc" id="L191">                return false; //cannot move as we are trapped by a wall</span>
+            }
+<span class="fc" id="L193">            return true; //we can still move forward, don't change current velocity.</span>
+        }
+<span class="fc" id="L195">        this.vel = new PVector(turnDirec.x/16f * speed, turnDirec.y/16f * speed); //we will turn if we are able to, otherwise we just keep moving foward.</span>
+<span class="fc" id="L196">        this.turning = true;</span>
+<span class="fc" id="L197">        return true;</span>
+    }
+    
+    /**
+     * This method will store the move given as input by the user.
+     * @param newMove the new move defined by the input of the user.
+     */
+    public void setCurrMove(String newMove) {
+<span class="fc" id="L205">        this.currMove = newMove;</span>
+<span class="fc" id="L206">    }</span>
+    
+    /**
+     * This method will check whether Pacman is dead or not by determining whether Pacman makes contact with the ghosts or not. This method also checks if the Ghosts are in 
+     * frightened mode, which if they are, then Pacman will kill the ghosts instead.
+     * @return true or false.
+     */
+    public boolean isDead() {
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        for (GameObject ghost : ghosts) {</span>
+<span class="fc" id="L215">            float dist = (float) Math.sqrt(Math.pow(pos.x - ghost.getPos().x, 2) + Math.pow(pos.y - ghost.getPos().y, 2));</span>
+
+<span class="fc bfc" id="L217" title="All 4 branches covered.">            if (dist &lt; 1 &amp;&amp; !ghost.isDead()) {</span>
+
+<span class="fc bfc" id="L219" title="All 2 branches covered.">                if (GameObject.frightened) {</span>
+<span class="fc" id="L220">                    ghost.kill();</span>
+                } else {
+<span class="fc bfc" id="L222" title="All 2 branches covered.">                    if (lives == 1) {</span>
+<span class="fc" id="L223">                        gameOver = loss = true;</span>
+<span class="fc" id="L224">                        lives = 3;</span>
+<span class="fc" id="L225">                    } else {lives --;}</span>
+<span class="fc" id="L226">                    return true;</span>
+                }
+            }
+<span class="fc" id="L229">        }</span>
+
+<span class="fc" id="L231">        return false;</span>
+    }
+
+    /**
+     * This method will draw Pacman on the canvas in regards to his respective location. This method will also draw out his number of lives.
+     */
+    @Override
+    public void draw() {
+<span class="fc" id="L239">        app.image(this.getImg(), this.getPos().x * 16 - 5, this.getPos().y * 16 - 5);</span>
+
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        for (int i = 0; i &lt; lives; i++) {</span>
+<span class="fc" id="L242">            app.image(images[3], i * 28 + 8, 544);</span>
+        }
+<span class="fc" id="L244">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapParse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Refined_Assignment</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">MapParse.java</span></div><h1>MapParse.java</h1><pre class="source lang-java linenums">/*
+    Author: Tyler Gan
+    Date: 21/11/20
+    INFO1113 Assignment 2: Waka Waka
+
+    This is the MapParse class, where a map file is parsed and sets important information for each object to run the game.
+*/
+
+
+package ghost;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+
+import processing.core.PVector;
+
+public class MapParse {
+<span class="fc" id="L21">    private Tile[][] map = new Tile[36][28];</span>
+<span class="fc" id="L22">    private int fruitCount = 0;</span>
+<span class="fc" id="L23">    private List&lt;GameObject&gt; ghosts = new LinkedList&lt;&gt;();</span>
+
+    /**
+     * Constructor of the MapParse class. The actual parsing is done in the constructor.
+     * @param waka a Pacman object.
+     */
+<span class="fc" id="L29">    public MapParse(Pacman waka) {</span>
+<span class="fc" id="L30">        JSONParse jsonParser = new JSONParse(&quot;config.json&quot;);</span>
+
+<span class="fc" id="L32">        GameObject.modeLengths = jsonParser.getModeLengths();</span>
+<span class="fc" id="L33">        GameObject.frightenedLength = jsonParser.getFrightenedLength();</span>
+<span class="fc" id="L34">        GameObject.speed = jsonParser.getSpeed();</span>
+
+<span class="fc" id="L36">        PVector initialVel = new PVector(-1/16f * jsonParser.getSpeed(), 0);</span>
+
+<span class="fc" id="L38">        waka.setLives(jsonParser.getLives());</span>
+<span class="fc" id="L39">        waka.setVel(initialVel);</span>
+    
+        try {
+<span class="fc" id="L42">            File f = new File(jsonParser.getMap());</span>
+<span class="fc" id="L43">            Scanner reader = new Scanner(f);</span>
+
+<span class="fc" id="L45">            int yCoor = 0;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">            while (reader.hasNextLine()) {</span>
+<span class="fc" id="L47">                char[] row = reader.nextLine().trim().toCharArray();</span>
+
+<span class="fc bfc" id="L49" title="All 2 branches covered.">                for (int xCoor = 0; xCoor &lt; row.length; xCoor++) {</span>
+<span class="fc" id="L50">                    PVector pos = new PVector(xCoor, yCoor);</span>
+<span class="fc" id="L51">                    map[yCoor][xCoor] = new Tile(xCoor, yCoor);</span>
+
+<span class="pc bpc" id="L53" title="1 of 11 branches missed.">                    switch(row[xCoor]) {</span>
+                        case '0':
+<span class="fc" id="L55">                            map[yCoor][xCoor].setEmpty(true);</span>
+<span class="fc" id="L56">                            break;</span>
+                        
+                        case '1': case '2': case '3': case '4': case '5': case '6':
+<span class="fc" id="L59">                            map[yCoor][xCoor].setWall(true, Character.getNumericValue(row[xCoor]) - 1);</span>
+<span class="fc" id="L60">                            break;</span>
+                        
+                        case '7':
+<span class="fc" id="L63">                            map[yCoor][xCoor].setFruit(true);</span>
+<span class="fc" id="L64">                            fruitCount++;</span>
+<span class="fc" id="L65">                            break;</span>
+                        
+                        case '8':
+<span class="fc" id="L68">                            map[yCoor][xCoor].setSuperFruit(true);</span>
+<span class="fc" id="L69">                            fruitCount++;</span>
+<span class="fc" id="L70">                            break;</span>
+                        
+                        case '9':
+<span class="fc" id="L73">                            map[yCoor][xCoor].setAntiPower(true);</span>
+<span class="fc" id="L74">                            break;</span>
+                        
+                        case 'p':
+<span class="fc" id="L77">                            waka.setPos(pos);</span>
+<span class="fc" id="L78">                            map[yCoor][xCoor].setEmpty(true);</span>
+<span class="fc" id="L79">                            break;</span>
+
+                        case 'a':
+<span class="fc" id="L82">                            GhostPinky pinky = new GhostPinky(waka);</span>
+<span class="fc" id="L83">                            pinky.setVel(initialVel);</span>
+<span class="fc" id="L84">                            pinky.setPos(pos);</span>
+<span class="fc" id="L85">                            ghosts.add(pinky);</span>
+<span class="fc" id="L86">                            map[yCoor][xCoor].setEmpty(true);</span>
+<span class="fc" id="L87">                            break;</span>
+                        
+                        case 'c':
+<span class="fc" id="L90">                            GhostBlinky blinky = new GhostBlinky(waka);</span>
+<span class="fc" id="L91">                            blinky.setVel(initialVel);</span>
+<span class="fc" id="L92">                            blinky.setPos(pos);</span>
+<span class="fc" id="L93">                            ghosts.add(blinky);</span>
+<span class="fc" id="L94">                            map[yCoor][xCoor].setEmpty(true);</span>
+<span class="fc" id="L95">                            break;</span>
+                        
+                        case 'i':
+<span class="fc" id="L98">                            GhostClyde clyde = new GhostClyde(waka);</span>
+<span class="fc" id="L99">                            clyde.setVel(initialVel);</span>
+<span class="fc" id="L100">                            clyde.setPos(pos);</span>
+<span class="fc" id="L101">                            ghosts.add(clyde);</span>
+<span class="fc" id="L102">                            map[yCoor][xCoor].setEmpty(true);</span>
+<span class="fc" id="L103">                            break;</span>
+                        
+                        case 'w':
+<span class="fc" id="L106">                            GhostInky inky = new GhostInky(waka);</span>
+<span class="fc" id="L107">                            inky.setVel(initialVel);</span>
+<span class="fc" id="L108">                            inky.setPos(pos);</span>
+<span class="fc" id="L109">                            ghosts.add(inky);</span>
+<span class="fc" id="L110">                            map[yCoor][xCoor].setEmpty(true);</span>
+<span class="fc" id="L111">                            break;</span>
+                        
+                        default:
+<span class="nc" id="L114">                        System.out.printf(&quot;\n%FAILURE: UNKNOWN ELEMENT FOUND IN MAP: %s\n&quot;, row[xCoor]);</span>
+<span class="nc" id="L115">                        System.exit(1);</span>
+                    }
+                }
+<span class="fc" id="L118">                yCoor++;</span>
+<span class="fc" id="L119">            }</span>
+<span class="fc" id="L120">            waka.setFruitCount(fruitCount);</span>
+<span class="fc" id="L121">            setIntersections();</span>
+<span class="fc" id="L122">            reader.close();</span>
+
+<span class="pc" id="L124">        } catch (FileNotFoundException e) {}</span>
+<span class="fc" id="L125">    }</span>
+
+    /**
+     * This method will identify any tiles in the matrix which are intersections and then set those tiles as intersections.
+     */
+    public void setIntersections() {
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        for (int yCoor = 0; yCoor &lt; map.length; yCoor++) {</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">            for (int xCoor = 0; xCoor &lt; map[yCoor].length; xCoor++) {</span>
+<span class="fc" id="L133">                map[yCoor][xCoor].setIntersection(map);</span>
+            }
+        }
+<span class="fc" id="L136">    }</span>
+
+    /**
+     * This method will return the matrix.
+     * @return map
+     */
+	public Tile[][] getMap() {
+<span class="fc" id="L143">		return map;</span>
+    }
+    
+    /**
+     * This method will return the number of fruits found in the matrix.
+     * @return fruitCount
+     */
+    public int getFruitCount() {
+<span class="fc" id="L151">        return fruitCount;</span>
+    }
+
+    /**
+     * This method will return all the Ghosts found in the map configuration.
+     * @return ghosts
+     */
+    public List&lt;GameObject&gt; getGhosts() {
+<span class="fc" id="L159">        return ghosts;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

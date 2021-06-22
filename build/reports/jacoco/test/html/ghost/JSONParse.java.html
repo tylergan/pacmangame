@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JSONParse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Refined_Assignment</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">JSONParse.java</span></div><h1>JSONParse.java</h1><pre class="source lang-java linenums">/*
+    Author: Tyler Gan
+    Date: 21/11/20
+    INFO1113 Assignment 2: Waka Waka
+
+    This is the JSONParse class, a class used to parse the json config file.
+*/
+
+package ghost;
+
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+public class JSONParse {
+    private JSONObject jsonConfig;
+
+    /**
+     * The constructor of the JSONParse class.
+     * @param filename the filename of the JSON file.
+     */
+<span class="fc" id="L27">    public JSONParse(String filename) {</span>
+        try{
+<span class="fc" id="L29">            jsonConfig = (JSONObject) new JSONParser().parse(new FileReader(filename));</span>
+<span class="nc" id="L30">        } catch (Exception e) {</span>
+<span class="nc" id="L31">            System.out.println(&quot;The JSONParser was not able to properly configure the file.&quot;);</span>
+<span class="nc" id="L32">            System.exit(1);</span>
+<span class="fc" id="L33">        }</span>
+<span class="fc" id="L34">    }</span>
+
+    /**
+     * Will return the name of the filename the map.
+     * @return map filename.
+     */
+    public String getMap() {
+<span class="fc" id="L41">        return (String) jsonConfig.get(&quot;map&quot;);</span>
+    }
+
+    /**
+     * Will return the specified number of lives for Pacman.
+     * @return lives
+     */
+    public int getLives() {
+<span class="fc" id="L49">        return (int)(long) jsonConfig.get(&quot;lives&quot;);</span>
+    }
+
+    /**
+     * Will return the specified speed for Pacman.
+     * @return speed 
+     */
+    public int getSpeed() {
+<span class="fc" id="L57">        return (int)(long) jsonConfig.get(&quot;speed&quot;);</span>
+    }
+
+    /**
+     * Will return the specified modeLengths for the Ghosts.
+     * @return modeLengths
+     */
+    public List&lt;Integer&gt; getModeLengths() {
+<span class="fc" id="L65">        List&lt;Integer&gt; modeLengths = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L67">        JSONArray configModeLengths = (JSONArray) jsonConfig.get(&quot;modeLengths&quot;);</span>
+<span class="fc" id="L68">        Iterator&lt;Long&gt; iterator = configModeLengths.iterator();</span>
+
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L71">            modeLengths.add((int)(long) iterator.next());</span>
+        }
+
+<span class="fc" id="L74">        return modeLengths;</span>
+
+    }
+
+    /**
+     * Will return the specified frightened length for the Ghosts.
+     * @return frightenedLength 
+     */
+    public int getFrightenedLength() {
+<span class="fc" id="L83">        return (int)(long) jsonConfig.get(&quot;frightenedLength&quot;);</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

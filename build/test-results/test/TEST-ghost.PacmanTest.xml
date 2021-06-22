@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ghost.PacmanTest" tests="20" skipped="0" failures="0" errors="0" timestamp="2020-11-22T12:24:26" hostname="tylers-mbp.internal.usyd.edu.au" time="2.08">
+  <properties/>
+  <testcase name="constructorTest()" classname="ghost.PacmanTest" time="0.045"/>
+  <testcase name="testLeftMove()" classname="ghost.PacmanTest" time="0.502"/>
+  <testcase name="getSpeedTest()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="testLastFruit()" classname="ghost.PacmanTest" time="0.003"/>
+  <testcase name="testGetLives()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="testAntiFruit()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="testDeath()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="simulateGhostCollision()" classname="ghost.PacmanTest" time="0.002"/>
+  <testcase name="testKill()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="testMove()" classname="ghost.PacmanTest" time="0.003"/>
+  <testcase name="testRightMove()" classname="ghost.PacmanTest" time="0.502"/>
+  <testcase name="testGetImgs()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="testStateAnimate()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="getPosTest()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="testSetGhosts()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="getVelTest()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="testLivesLost()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="testUpMove()" classname="ghost.PacmanTest" time="0.502"/>
+  <testcase name="testSuperFruit()" classname="ghost.PacmanTest" time="0.001"/>
+  <testcase name="testDownMove()" classname="ghost.PacmanTest" time="0.503"/>
+  <system-out><![CDATA[[ 12.9375, 20.0, 0.0 ]
+[ 12.875, 20.0, 0.0 ]
+[ 12.8125, 20.0, 0.0 ]
+[ 12.75, 20.0, 0.0 ]
+[ 12.6875, 20.0, 0.0 ]
+[ 12.625, 20.0, 0.0 ]
+[ 12.5625, 20.0, 0.0 ]
+[ 12.5, 20.0, 0.0 ]
+[ 12.4375, 20.0, 0.0 ]
+[ 12.375, 20.0, 0.0 ]
+[ 12.3125, 20.0, 0.0 ]
+[ 12.25, 20.0, 0.0 ]
+[ 12.1875, 20.0, 0.0 ]
+[ 12.125, 20.0, 0.0 ]
+[ 12.0625, 20.0, 0.0 ]
+[ 12.0, 20.0, 0.0 ]
+[ 11.9375, 20.0, 0.0 ]
+[ 11.875, 20.0, 0.0 ]
+[ 11.8125, 20.0, 0.0 ]
+[ 11.75, 20.0, 0.0 ]
+]]></system-out>
+  <system-err><![CDATA[java.lang.NullPointerException
+	at processing.awt.PGraphicsJava2D.imageImpl(PGraphicsJava2D.java:1613)
+	at processing.core.PGraphics.image(PGraphics.java:3773)
+	at processing.core.PApplet.image(PApplet.java:12611)
+	at ghost.Pacman.draw(Pacman.java:239)
+	at ghost.App.draw(App.java:61)
+	at processing.core.PApplet.handleDraw(PApplet.java:2426)
+	at processing.awt.PSurfaceAWT$12.callDraw(PSurfaceAWT.java:1557)
+	at processing.core.PSurfaceNone$AnimationThread.run(PSurfaceNone.java:316)
+]]></system-err>
+</testsuite>

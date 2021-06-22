@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GhostBlinky.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Refined_Assignment</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">GhostBlinky.java</span></div><h1>GhostBlinky.java</h1><pre class="source lang-java linenums">/*
+    Author: Tyler Gan
+    Date: 21/11/20
+    INFO1113 Assignment 2: Waka Waka
+
+    This is the GhostBlinky class, where methods related to chaser are stored.
+*/
+
+package ghost;
+
+import java.util.Comparator;
+import java.util.LinkedList;
+
+import processing.core.PVector;
+
+public class GhostBlinky extends GameObject{
+    private Pacman waka;
+    private PVector targetNode;
+<span class="fc" id="L19">    private boolean completeBackwards = false;</span>
+
+    /**
+     * Constructor of the Blinky class.
+     * @param waka a Pacman object.
+    */
+<span class="fc" id="L25">    public GhostBlinky(Pacman waka) {</span>
+<span class="fc" id="L26">        this.waka = waka;</span>
+<span class="fc" id="L27">    }</span>
+
+    /**
+     * This method is an overrided method that set Pinky's target node depending on the mode.
+     */
+    @Override
+    public void setTargetNode() {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (!scatterMode) {</span>
+<span class="fc" id="L35">            setBlinkyTargetNode();</span>
+        } else {
+<span class="fc" id="L37">            scatter();</span>
+        }
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * This method will set Blinky's target destination. In this case, Blinky will always target Pacman's position.
+    */
+    public void setBlinkyTargetNode() {
+<span class="fc" id="L45">        targetNode = new PVector(waka.getPos().x, waka.getPos().y);</span>
+<span class="fc" id="L46">    }</span>
+
+    /**
+     * This method will influence the ghosts to move into scatter mode. This method will simply set the Ghost's new target node to their respective scatter corner. 
+     * For Blinky specifically, he will target the top left corner.
+    */
+    public void scatter() {
+<span class="fc" id="L53">        targetNode = map[0][0].getPos();</span>
+<span class="fc" id="L54">    }</span>
+
+    /**
+     * This method will update Blinky's current position using a &quot;velocity&quot;, determined through a series of checks made by a bunch of other methods located in this method. 
+     * he most important method used for this function to work is checkDirection().
+    */
+    @Override
+    public void move() {
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (!frightened) {</span>
+<span class="fc" id="L63">            checkDirection();</span>
+        } else {
+<span class="fc bfc" id="L65" title="All 2 branches covered.">            if (!completeBackwards) {</span>
+<span class="fc" id="L66">                vel.mult(-1);</span>
+<span class="fc" id="L67">                completeBackwards = true;</span>
+            }
+<span class="fc" id="L69">            runAway();</span>
+        }
+
+<span class="fc" id="L72">        pos.add(vel);</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * This method helps Blinky makes decision relative to its target node. It uses Euclidean distance as a heuristic and sorts all possible decisions 
+     * (neighbouring Tiles - possible moves) using the heuristic to obtain the shortest (yet valid (as Ghosts cannot move backwards)) decision.
+    */
+    @Override
+    public void chooseShortestDecision() {
+<span class="fc" id="L81">        Tile intersection = map[(int) pos.y][(int) pos.x];</span>
+<span class="fc" id="L82">        LinkedList&lt;Tile&gt; sortedList = new LinkedList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        for (Tile node: intersection.getPossibleTurns()) { //set the hCost of each Tile and add it to a list to be sorted</span>
+<span class="fc" id="L85">            node.setHCost(targetNode);</span>
+<span class="fc" id="L86">            sortedList.add(node);</span>
+<span class="fc" id="L87">        }</span>
+
+<span class="fc" id="L89">        sortedList.sort(Comparator.comparing(Tile::getHCost)); //sort the list by hCost</span>
+<span class="fc" id="L90">        PVector turnTo = new PVector(vel.x, vel.y);</span>
+
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">        for (Tile node : sortedList) {</span>
+<span class="fc bfc" id="L93" title="All 4 branches covered.">            if ((node.getPos().x - pos.x) + vel.x*16/speed == 0 &amp;&amp; (node.getPos().y - pos.y) + vel.y*16/speed == 0) {</span>
+<span class="fc" id="L94">                continue; //ignore any backwards movement</span>
+            }
+<span class="fc" id="L96">            turnTo = new PVector(node.getPos().x - pos.x, node.getPos().y - pos.y); //use the first node which has low hCost and complies with backwards rule</span>
+<span class="fc" id="L97">            break;</span>
+        }
+
+<span class="fc" id="L100">        vel = new PVector(turnTo.x/16f * speed, turnTo.y/16f * speed);</span>
+<span class="fc" id="L101">    }</span>
+
+    /**
+     * A method to show Blinky's target destination; this is only used for debug mode.
+    */
+    @Override
+    public void drawTarget() {
+<span class="fc" id="L108">        app.strokeWeight(2);</span>
+<span class="fc" id="L109">        app.stroke(255, 0, 0);</span>
+
+<span class="fc" id="L111">        app.line(pos.x*16 + 8, pos.y*16 + 8, targetNode.x*16 + 8, targetNode.y*16 + 8);</span>
+<span class="fc" id="L112">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

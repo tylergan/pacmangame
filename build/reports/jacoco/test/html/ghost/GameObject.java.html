@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameObject.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Refined_Assignment</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">GameObject.java</span></div><h1>GameObject.java</h1><pre class="source lang-java linenums">package ghost;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
+import processing.core.PApplet;
+import processing.core.PFont;
+import processing.core.PImage;
+import processing.core.PVector;
+
+/*
+    Author: Tyler Gan
+    Date: 21/11/20
+    INFO1113 Assignment 2: Waka Waka
+
+    This is the GameObject class, an abstract class which other class inherits from and uses to set and get information and methods.
+*/
+
+<span class="fc" id="L20">public class GameObject {</span>
+    //STATIC VARIABLES
+<span class="fc" id="L22">    protected static boolean gameOver = false, win = false, loss = false;</span>
+    protected static PImage gameOverImg;
+
+<span class="fc" id="L25">    protected static long activatedAt = Long.MAX_VALUE;</span>
+<span class="fc" id="L26">    protected static boolean timerSet = false;</span>
+
+    protected static PFont font;
+
+    protected static int speed;
+    protected static Tile[][] map;
+    protected static PApplet app;
+
+<span class="fc" id="L34">    protected static boolean invisibleMode = false;</span>
+<span class="fc" id="L35">    protected static Long invisibleLength = Long.MAX_VALUE;</span>
+
+    protected static PImage[] frightenedImg;
+<span class="fc" id="L38">    protected static boolean frightened = false;</span>
+    protected static int frightenedLength;
+
+<span class="fc" id="L41">    protected static boolean scatterMode = false;</span>
+<span class="fc" id="L42">    protected static long modeTimer = Long.MAX_VALUE;</span>
+    protected static List&lt;Integer&gt; modeLengths;
+<span class="fc" id="L44">    protected static int modeIndex = 0;</span>
+
+
+    //INSTANCE VARIABLES
+    protected PImage img;
+    protected int width;
+    protected int height;
+
+    protected PVector pos;
+    protected PVector vel;
+
+<span class="fc" id="L55">    protected boolean dead = false;</span>
+<span class="fc" id="L56">    protected float frightenedImgIndex = 0;</span>
+
+
+    //BASIC SETTERS AND GETTERS USED TO OBTAIN AND SET VALUES FOR EACH OBJECT THAT IS A SUB-CLASS OF GAMEOBJECT ===========================
+
+    /**
+     * This method will return the image of an object.
+     * @return img
+     */
+    public PImage getImg() {
+<span class="fc" id="L66">        return img;</span>
+    }
+
+    /**
+     * This method will set the image of an object.
+     * @param img the image of an object.
+     */
+    public void setImg(PImage img) {
+<span class="fc" id="L74">        this.img = img;</span>
+<span class="fc" id="L75">    }</span>
+
+    /**
+     * This method will return the position of an object.
+     * @return pos.
+     */
+    public PVector getPos() {
+<span class="fc" id="L82">        return pos;</span>
+    }
+
+    /**
+     * This method will set the position of an object.
+     * @param pos the position of an object.
+     */
+    public void setPos(PVector pos) {
+<span class="fc" id="L90">        this.pos = pos;</span>
+<span class="fc" id="L91">    }</span>
+    
+    /**
+     * This method will return the velocity of an object.
+     * @return vel
+     */
+    public PVector getVel() {
+<span class="fc" id="L98">        return vel;</span>
+    }
+
+    /**
+     * This method will set the velocity of an object.
+     * @param vel the velocity of an object.
+     */
+    public void setVel(PVector vel) {
+<span class="fc" id="L106">        this.vel = vel;</span>
+<span class="fc" id="L107">    }</span>
+
+    /**
+     * This method will return the speed of an object.
+     * @return speed
+     */
+    public int getSpeed() {
+<span class="fc" id="L114">        return speed;</span>
+    }
+
+    /**
+     * This method will return whether an object is dead or not.
+     * @return dead
+     */
+    public boolean isDead() {
+<span class="fc" id="L122">        return dead;</span>
+    }
+
+    /**
+     * This method will kill the ghosts for the rest of the round if the ghosts collide with Pacman while in frightended mode; this method is used in the Pacman class, 
+     * checkDirection() method.
+    */ 
+    public void kill() {
+<span class="fc" id="L130">        dead = true;</span>
+<span class="fc" id="L131">    }</span>
+
+    /**
+     * This method is used by most subclasses which inherits from the GameObject class; this method draws objects onto the canvas.
+    */    
+    public void draw() {
+<span class="nc" id="L137">        app.image(this.getImg(), this.getPos().x * 16 - 5, this.getPos().y * 16 - 5);</span>
+<span class="nc" id="L138">    }</span>
+
+    //METHODS USED BY THE GAME ===========================
+
+        /** 
+         * This method checks whether the game is finished. The game can only be finished if the Pacman is able to obtain all fruits or is killed by colliding with any of the ghosts.
+         * This method works in conjunction with App.reset().
+         * @param app the App.
+         * @param waka a Pacman object.
+         * @return boolean
+        */
+    public static boolean finished(App app, Pacman waka) {
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        if (gameOver) {</span>
+<span class="fc" id="L151">            return true;</span>
+
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        } else if (waka.isDead()) { //if Waka is dead, but still has left over lives, just reset the game back to the original state.</span>
+<span class="fc" id="L154">            app.reset();</span>
+        }
+<span class="fc" id="L156">        return false;</span>
+    }
+
+    /**
+     * This method will draw either a win or loss message. Using System.currentTimeMillis(), we ensure that the message is shown for 10 seconds before resetting to the 
+     * original state of the game.
+     * @param app the App.
+    */
+    public static void drawEnding(App app) {
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (loss) {</span>
+<span class="fc" id="L166">            app.background(0, 0, 0);</span>
+<span class="fc" id="L167">            app.image(gameOverImg, App.WIDTH/2 - 57, App.HEIGHT/2 - 30);</span>
+
+        } else {
+<span class="fc" id="L170">            app.background(0, 0, 0);</span>
+<span class="fc" id="L171">            app.textFont(font);</span>
+<span class="fc" id="L172">            app.textAlign(App.CENTER);</span>
+<span class="fc" id="L173">            app.text(&quot;YOU WIN&quot;, App.WIDTH/2- 10, App.HEIGHT/2);</span>
+        }
+
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (!timerSet) {</span>
+<span class="fc" id="L177">            activatedAt = System.currentTimeMillis();</span>
+<span class="fc" id="L178">            timerSet = true;</span>
+        }
+
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        if (System.currentTimeMillis() - activatedAt &gt;= 10*1000) { //checking if we have waited for 10 seconds.</span>
+<span class="fc" id="L182">                gameOver = win = loss = false;</span>
+<span class="fc" id="L183">                timerSet = false;</span>
+<span class="fc" id="L184">                activatedAt = Long.MAX_VALUE;</span>
+        }
+
+<span class="fc" id="L187">        app.reset();</span>
+<span class="fc" id="L188">    }</span>
+
+    /**
+     * This method is used in the main App class to reset GameObject states (specifically concerned with the Ghosts) back to its original state.
+    */
+    public static void reset() {
+<span class="fc" id="L194">        frightened = false;</span>
+<span class="fc" id="L195">        invisibleMode = false;</span>
+<span class="fc" id="L196">        modeIndex = 0;</span>
+<span class="fc" id="L197">        modeTimer = Long.MAX_VALUE;</span>
+<span class="fc" id="L198">    }</span>
+    
+    //METHODS UNIQUE TO THE GHOSTS ONLY ===========================
+
+    /**
+     * This method is the controller of the movement for the ghost. It will help the ghost make decisions when approaching a wall as well as make decisions when targeting Pacman. 
+     * It works with multiple other methods: setTargetNode() and chooseShortestDecision().
+     * Additional getters and setters from other classes were used to obtain needed information, such as a Tile's neighbours, for example.
+    */
+    public void checkDirection() {
+<span class="fc" id="L208">        setTargetNode();</span>
+
+<span class="fc bfc" id="L210" title="All 4 branches covered.">        if (pos.x % 1 != 0 || pos.y % 1 != 0) { //only checking for whole indexes</span>
+<span class="fc" id="L211">            return;</span>
+        }
+
+        //check if we are going into a wall or are at an intersection
+<span class="fc" id="L215">        PVector futurePos = new PVector(pos.x + vel.x, pos.y + vel.y);</span>
+<span class="fc bfc" id="L216" title="All 4 branches covered.">        if ((map[(int) futurePos.y][(int) futurePos.x + 1].isWall() &amp;&amp; vel.x == 1/16f * speed) || //if we are moving right, check future (x+1,y) = wall</span>
+<span class="fc bfc" id="L217" title="All 4 branches covered.">            (map[(int) futurePos.y + 1][(int) futurePos.x].isWall() &amp;&amp; vel.y == 1/16f * speed) || //if we are moving down, check future (x,y+1) = wall</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">            (map[(int) futurePos.y][(int) futurePos.x].isWall())) </span>
+            {   
+<span class="fc" id="L220">                Tile current = map[(int) pos.y][(int) pos.x];</span>
+
+<span class="fc bfc" id="L222" title="All 2 branches covered.">                if (current.isIntersection()) { //check if we are at an intersection, first</span>
+<span class="fc" id="L223">                    chooseShortestDecision();</span>
+<span class="fc" id="L224">                    return;</span>
+                }
+                
+                //otherwise, find possible nodes to avoid running into wall without going backwards
+<span class="fc" id="L228">                List&lt;Tile&gt; neighbours = current.getPossibleTurns();</span>
+                
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">                for (Tile node: neighbours) {</span>
+<span class="pc bpc" id="L231" title="1 of 4 branches missed.">                    if ((node.getPos().x - pos.x) + vel.x*16/speed == 0 &amp;&amp; (node.getPos().y - pos.y) + vel.y*16/speed == 0) {</span>
+<span class="fc" id="L232">                        continue; //ignore any nodes that will cause us to go backwards</span>
+                    }
+
+<span class="fc" id="L235">                    PVector turnTo = new PVector(node.getPos().x - pos.x, node.getPos().y - pos.y); //first available node found</span>
+<span class="fc" id="L236">                    vel = new PVector(turnTo.x/16f * speed, turnTo.y/16f * speed); //set new vel</span>
+<span class="fc" id="L237">                    break;</span>
+                }
+<span class="fc" id="L239">                return;</span>
+            }
+
+<span class="fc" id="L242">        chooseShortestDecision();</span>
+<span class="fc" id="L243">    }</span>
+
+    /**
+     * This method is used by the ghosts ONLY. They run away from from Pacman, choosing random directions to go in (without going backwards (except for the initial turn backwards)) 
+     * everytime they are located at an intersersection. This method works with chooseRandomDirection().
+    */
+    public void runAway() {
+<span class="fc bfc" id="L250" title="All 2 branches covered.">        if (System.currentTimeMillis() - activatedAt &gt;= frightenedLength*1000) { //Checking for the duration of how long they have been in frightened mode</span>
+<span class="fc" id="L251">            frightened = false;</span>
+<span class="fc" id="L252">            return;</span>
+        }
+
+<span class="fc bfc" id="L255" title="All 4 branches covered.">        if (pos.x % 1 != 0 || pos.y % 1 != 0) { //only checking for whole indexes</span>
+<span class="fc" id="L256">            return;</span>
+        }
+
+        //check if we are going into a wall or are at an intersection
+<span class="fc" id="L260">        PVector futurePos = new PVector(pos.x + vel.x, pos.y + vel.y);</span>
+<span class="fc bfc" id="L261" title="All 4 branches covered.">        if ((map[(int) futurePos.y][(int) futurePos.x + 1].isWall() &amp;&amp; vel.x == 1/16f * speed) || //if we are moving right, check future (x+1,y) = wall</span>
+<span class="fc bfc" id="L262" title="All 4 branches covered.">            (map[(int) futurePos.y + 1][(int) futurePos.x].isWall() &amp;&amp; vel.y == 1/16f * speed) || //if we are moving down, check future (x,y+1) = wall</span>
+<span class="fc bfc" id="L263" title="All 2 branches covered.">            (map[(int) futurePos.y][(int) futurePos.x].isWall())) </span>
+            {   
+<span class="fc" id="L265">                Tile current = map[(int) pos.y][(int) pos.x];</span>
+
+<span class="fc bfc" id="L267" title="All 2 branches covered.">                if (current.isIntersection()) { //check if we are at an intersection, first</span>
+<span class="fc" id="L268">                    chooseRandomDirection();</span>
+<span class="fc" id="L269">                    return;</span>
+                }
+                
+                //otherwise, find possible nodes to avoid running into wall without going backwards
+<span class="fc" id="L273">                List&lt;Tile&gt; neighbours = current.getPossibleTurns();</span>
+                
+<span class="pc bpc" id="L275" title="1 of 2 branches missed.">                for (Tile node: neighbours) {</span>
+<span class="pc bpc" id="L276" title="1 of 4 branches missed.">                    if ((node.getPos().x - pos.x) + vel.x*16/speed == 0 &amp;&amp; (node.getPos().y - pos.y) + vel.y*16/speed == 0) {</span>
+<span class="fc" id="L277">                        continue; //ignore any nodes that will cause us to go backwards</span>
+                    }
+<span class="fc" id="L279">                    PVector turnTo = new PVector(node.getPos().x - pos.x, node.getPos().y - pos.y);</span>
+<span class="fc" id="L280">                    vel = new PVector(turnTo.x/16f * speed, turnTo.y/16f * speed);</span>
+<span class="fc" id="L281">                    break;</span>
+                }
+
+<span class="fc" id="L284">                return;</span>
+            }
+        
+<span class="fc bfc" id="L287" title="All 2 branches covered.">        if (map[(int) pos.y][(int) pos.x].isIntersection()) { //check if we are at an intersection, first</span>
+<span class="fc" id="L288">                chooseRandomDirection();</span>
+<span class="fc" id="L289">                return;</span>
+        }
+<span class="fc" id="L291">    }</span>
+
+    /**
+     * This method is only used at intersections and will cause the ghost to pick a direction at random WITHOUT going backwards.
+    */
+    public void chooseRandomDirection() {
+<span class="fc" id="L297">        Tile intersection = map[(int) pos.y][(int) pos.x];</span>
+<span class="fc" id="L298">        LinkedList&lt;Tile&gt; sortedList = new LinkedList&lt;&gt;();</span>
+
+<span class="fc" id="L300">        PVector turnTo = new PVector(vel.x, vel.y);</span>
+
+<span class="fc bfc" id="L302" title="All 2 branches covered.">        for (Tile node : intersection.getPossibleTurns()) {</span>
+<span class="fc bfc" id="L303" title="All 4 branches covered.">            if ((node.getPos().x - pos.x) + vel.x*16/speed == 0 &amp;&amp; (node.getPos().y - pos.y) + vel.y*16/speed == 0) {</span>
+<span class="fc" id="L304">                continue; //ignore any backwards movement</span>
+            }
+<span class="fc" id="L306">            sortedList.add(node);</span>
+<span class="fc" id="L307">        }</span>
+
+<span class="fc" id="L309">        Random rand = new Random();</span>
+<span class="fc" id="L310">        int randIndex = rand.nextInt(sortedList.size());</span>
+<span class="fc" id="L311">        Tile randTile = sortedList.get(randIndex);</span>
+
+<span class="fc" id="L313">        turnTo = new PVector(randTile.getPos().x - pos.x, randTile.getPos().y - pos.y); //use the first node which has low hCost and complies with backwards rule</span>
+<span class="fc" id="L314">        vel = new PVector(turnTo.x/16f * speed, turnTo.y/16f * speed);</span>
+<span class="fc" id="L315">    }</span>
+
+    /**
+     * This method works similarly to how Pacman's open-close mouth animation works. We will only increase the index by a small amount (in floats) and add it to an int, which
+     * will floor the number to give us an index.
+    */ 
+    public void setGhostFrightIndex() {
+<span class="fc" id="L322">        frightenedImgIndex += 0.12;</span>
+<span class="fc" id="L323">    }</span>
+
+    /**
+     * This method is used by the ghosts ONLY. Found in the GhostController class, draw() method, it will draw the Ghosts depending on one of its many states.
+    */ 
+    public void drawGhost() {
+<span class="fc bfc" id="L329" title="All 2 branches covered.">        if (dead) {return;} //don't draw ghosts if dead.</span>
+
+<span class="fc bfc" id="L331" title="All 4 branches covered.">        if (!frightened &amp;&amp; !invisibleMode) { //ghosts have no specific state, just draw normally.</span>
+<span class="fc" id="L332">            app.image(this.getImg(), this.getPos().x * 16 - 5, this.getPos().y * 16 - 5);</span>
+            
+<span class="fc bfc" id="L334" title="All 2 branches covered.">        }  else if (frightened) {</span>
+<span class="fc" id="L335">            int imgIndex = 0;</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">            if (System.currentTimeMillis() - activatedAt &gt;= (frightenedLength - 2) * 1000) { //start flashing colours to show frightened mode is ending 2 seconds before hand.</span>
+<span class="fc" id="L337">                setGhostFrightIndex();</span>
+<span class="fc" id="L338">                imgIndex = (int) frightenedImgIndex % 2;</span>
+            }
+<span class="fc" id="L340">            app.image(frightenedImg[imgIndex], this.getPos().x * 16 - 5, this.getPos().y * 16 - 5);</span>
+
+<span class="fc" id="L342">        } else {</span>
+<span class="pc bpc" id="L343" title="1 of 2 branches missed.">            if (System.currentTimeMillis() - invisibleLength &gt;= 8 * 1000) {</span>
+<span class="nc" id="L344">                invisibleMode = false;</span>
+
+<span class="fc bfc" id="L346" title="All 2 branches covered.">            } else if ((System.currentTimeMillis() - invisibleLength) % (2 * 1000) &lt; 20) { //ghosts are in invisible mode, only show flashes of them every 2 seconds-ish.</span>
+<span class="fc" id="L347">                app.image(frightenedImg[1], this.getPos().x * 16 - 5, this.getPos().y * 16 - 5);</span>
+            }
+        }
+<span class="fc" id="L350">    }</span>
+
+    //METHODS THAT WILL BE OVERRIDED BY EACH GHOST CLASS
+    /**
+     * Method that will be overrided by the Ghost classes.
+     */
+<span class="nc" id="L356">    public void chooseShortestDecision() {}</span>
+
+    /**
+     * Method that will be overrided by the Ghost classes.
+     */
+<span class="nc" id="L361">    public void setTargetNode() {}</span>
+
+    /**
+     * Method that will be overrided by the Ghost classes.
+     */
+<span class="nc" id="L366">    public void drawTarget() {}</span>
+
+    /**
+     * Method that will be overrided by the Ghost classes.
+     */
+<span class="nc" id="L371">    public void move() {}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

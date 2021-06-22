@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Refined_Assignment</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">Tile.java</span></div><h1>Tile.java</h1><pre class="source lang-java linenums">/*
+    Author: Tyler Gan
+    Date: 21/11/20
+    INFO1113 Assignment 2: Waka Waka
+
+    This is the Tiles class, where objects found in the map file are created to interact with the other objects in the game.
+*/
+
+package ghost;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import processing.core.PVector;
+
+public class Tile extends GameObject{
+<span class="fc" id="L17">    private boolean wall = false;</span>
+    private int wallState;
+
+<span class="fc" id="L20">    private boolean empty = false;</span>
+
+<span class="fc" id="L22">    private boolean fruit = false;</span>
+<span class="fc" id="L23">    private boolean superFruit = false;</span>
+<span class="fc" id="L24">    private int superFruitState = 0;</span>
+
+<span class="fc" id="L26">    private boolean antiPower = false;</span>
+
+<span class="fc" id="L28">    private float blinkIndex = 0;</span>
+
+<span class="fc" id="L30">    private boolean isIntersection = false;</span>
+<span class="fc" id="L31">    private LinkedList&lt;Tile&gt; possibleTurns = new LinkedList&lt;&gt;();</span>
+    private float hCost;
+
+    /**
+     * The constructor of the Tile class.
+     * @param x x-coordinate
+     * @param y y-coordinate
+     */
+<span class="fc" id="L39">    public Tile(int x, int y) {</span>
+<span class="fc" id="L40">        pos = new PVector(x, y);</span>
+<span class="fc" id="L41">    }</span>
+
+    /**
+     * This method determines whether the tile is a wall.
+     * @return wall
+     */
+    public boolean isWall() {
+<span class="fc" id="L48">        return wall;</span>
+    }
+
+    /**
+     * This method will set the Tile to be a wall, and if it is a wall, it wil also set this tile's type of wall.
+     * @param wall boolean
+     * @param wallState int
+     */
+    public void setWall(boolean wall, int wallState) {
+<span class="fc" id="L57">        this.wall = wall; </span>
+<span class="fc" id="L58">        this.wallState = wallState;</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * This method will return the state of the wall.
+     * @return wallState
+     */
+    public int getWallState() {
+<span class="fc" id="L66">        return wallState;</span>
+    }
+
+    /**
+     * This method determines whether the tile is a fruit.
+     * @return fruit
+     */
+    public boolean isFruit() {
+<span class="fc" id="L74">        return fruit;</span>
+    }
+
+    /**
+     * This method will set the Tile to be a fruit.
+     * @param fruit boolean
+     */
+    public void setFruit(boolean fruit) {
+<span class="fc" id="L82">        this.fruit = fruit;</span>
+<span class="fc" id="L83">    }</span>
+
+    /**
+     * This method conducts the fruit function.
+     */
+    public void fruitFunction() {
+<span class="fc" id="L89">        fruit = false;</span>
+<span class="fc" id="L90">        empty = true;</span>
+<span class="fc" id="L91">    }</span>
+
+    /**
+     * This method determines whether the tile is a super fruit.
+     * @return superFruit
+     */
+    public boolean isSuperFruit() {
+<span class="fc" id="L98">        return superFruit;</span>
+    }
+
+    /**
+     * This method will set the Tile to be a super fruit.
+     * @param superFruit boolean
+     */
+    public void setSuperFruit(boolean superFruit) {
+<span class="fc" id="L106">        this.superFruit = superFruit;</span>
+<span class="fc" id="L107">    }</span>
+
+    /**
+     * This method will the state of the super fruit (to give it a flashing effect).
+     * @return superFruitState
+     */
+    public int getSuperFruitState() {
+<span class="fc" id="L114">        return superFruitState;</span>
+    }
+
+    /**
+     * This method will set the state of the superfruit by incrementing an index and by adding that index to an int.
+     */
+    public void setSuperFruitState() {
+<span class="fc" id="L121">        blinkIndex += 0.2;</span>
+<span class="fc" id="L122">        this.superFruitState = (int) (this.superFruitState + blinkIndex) % 2;</span>
+<span class="fc" id="L123">    }</span>
+
+    /**
+     * This method conducts the super fruit function, which causes ghosts to go into frightened mode.
+     */
+    public void superFruitFunction() {
+<span class="fc" id="L129">        GameObject.frightened = true;</span>
+<span class="fc" id="L130">        GameObject.activatedAt = System.currentTimeMillis(); //set at what time we activated this mode</span>
+<span class="fc" id="L131">        superFruit = false;</span>
+<span class="fc" id="L132">    }</span>
+
+    /**
+     * This method determines whether the tile is a anti-power up.
+     * @return antiPower
+     */
+    public boolean isAntiPower() {
+<span class="fc" id="L139">        return antiPower;</span>
+    }
+
+    /**
+     * This method will set the Tile to be an anti power up.
+     * @param antiPower boolean
+     */
+    public void setAntiPower(boolean antiPower) {
+<span class="fc" id="L147">        this.antiPower = antiPower;</span>
+<span class="fc" id="L148">    }</span>
+
+    /**
+     * This method executes the anti-power up fucntion, which causes ghosts to go into invisible mode.
+     */
+    public void antiPowerFunction() {
+<span class="fc" id="L154">        invisibleMode = true;</span>
+<span class="fc" id="L155">        GameObject.invisibleLength = System.currentTimeMillis();</span>
+<span class="fc" id="L156">        antiPower = false;</span>
+<span class="fc" id="L157">        empty = true;</span>
+<span class="fc" id="L158">    }</span>
+
+    /**
+     * This method determines whether the tile is an empty tile.
+     * @return empty
+     */
+    public boolean isEmpty() {
+<span class="fc" id="L165">        return empty;</span>
+    }
+
+    /**
+     * This method will set the Tile to be an empty tile.
+     * @param empty boolean
+     */
+    public void setEmpty(boolean empty) {
+<span class="fc" id="L173">        this.empty = empty;</span>
+<span class="fc" id="L174">    }</span>
+
+    /**
+     * This method determines whether the tile is an intersection.
+     * @return isIntersection
+     */
+    public boolean isIntersection() {
+<span class="fc" id="L181">        return isIntersection;</span>
+    }
+
+    /**
+     * This method will calculate the euclidean distance of the particular Tile to a target position.
+     * @param targetPos the target position.
+     */
+    public void setHCost(PVector targetPos) {
+<span class="fc" id="L189">        hCost = (float) Math.sqrt(Math.pow(targetPos.x - pos.x, 2) + Math.pow(targetPos.y - pos.y, 2));</span>
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * This method will return the calculated heuristic (Euclidean distance).
+     * @return hCost
+     */
+    public float getHCost() {
+<span class="fc" id="L197">        return hCost;</span>
+    }
+
+    /**
+     * This method will return all the possible turns that can be made based off the neighbouring tiles which are not walls.
+     * @return possibleTurns
+     */
+    public List&lt;Tile&gt; getPossibleTurns() {
+<span class="fc" id="L205">        return possibleTurns;</span>
+    }
+
+    /**
+     * This method will take in a matrix and find all the intersections located in the matrix. Additionally, it will go through all possible Tiles and determine whether the 
+     * neighbouring tiles of each Tile is a possible and valid move.
+     * @param map a matrix
+     */
+    public void setIntersection(Tile[][] map) {
+        //ignore if it the current tile is a wall or out of bounds
+<span class="fc bfc" id="L215" title="All 10 branches covered.">        if (map[(int) pos.y][(int) pos.x].isWall() || !(pos.y &gt; 2 &amp;&amp; pos.y &lt; map.length - 2) || !(pos.x &gt; 0 &amp;&amp; pos.x &lt; map[0].length - 1)) {return;}</span>
+
+        //check if intersection
+<span class="fc" id="L218">        int canTurn = 0;</span>
+
+        //check horizontal
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if (!map[(int) pos.y + 1][(int) pos.x].isWall()) {</span>
+<span class="fc" id="L222">            possibleTurns.add(map[(int) pos.y + 1][(int) pos.x]);</span>
+<span class="fc" id="L223">            canTurn++; </span>
+        
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        } if (!map[(int) pos.y - 1][(int) pos.x].isWall()){</span>
+<span class="fc" id="L226">            possibleTurns.add(map[(int) pos.y - 1][(int) pos.x]); </span>
+<span class="fc" id="L227">            canTurn++; </span>
+        
+        //check vertical
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        } if (!map[(int) pos.y][(int) pos.x + 1].isWall()) {</span>
+<span class="fc" id="L231">            possibleTurns.add(map[(int) pos.y][(int) pos.x + 1]);</span>
+<span class="fc" id="L232">            canTurn++; </span>
+        
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        } if (!map[(int) pos.y][(int) pos.x - 1].isWall()) {</span>
+<span class="fc" id="L235">            possibleTurns.add(map[(int) pos.y][(int) pos.x - 1]);</span>
+<span class="fc" id="L236">            canTurn++; </span>
+        }
+
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        if (canTurn &gt;= 3) {</span>
+<span class="fc" id="L240">            this.isIntersection = true;</span>
+        }
+<span class="fc" id="L242">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

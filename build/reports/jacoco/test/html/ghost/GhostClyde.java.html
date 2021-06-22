@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GhostClyde.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Refined_Assignment</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">GhostClyde.java</span></div><h1>GhostClyde.java</h1><pre class="source lang-java linenums">/*
+    Author: Tyler Gan
+    Date: 21/11/20
+    INFO1113 Assignment 2: Waka Waka
+
+    This is the GhostClyde class, where methods related to ignorant are stored.
+*/
+
+package ghost;
+
+import java.util.Comparator;
+import java.util.LinkedList;
+
+import processing.core.PVector;
+
+public class GhostClyde extends GameObject{
+    private Pacman waka;
+    private PVector targetNode;
+<span class="fc" id="L19">    private boolean ignorantMode = false;</span>
+<span class="fc" id="L20">    private boolean completeBackwards = false;</span>
+    
+    /**
+     * Constructor of the Clyde class.
+     * @param waka, a Pacman object.
+    */
+<span class="fc" id="L26">    public GhostClyde(Pacman waka) {</span>
+<span class="fc" id="L27">        this.waka = waka;</span>
+<span class="fc" id="L28">    }</span>
+
+    /**
+     * This method is an overrided method that set Pinky's target node depending on the mode.
+     */
+    @Override
+    public void setTargetNode() {
+<span class="fc bfc" id="L35" title="All 4 branches covered.">        if (!ignorantMode &amp;&amp; !scatterMode) { //clyde will engage in ignorant mode if the ghost is 8 or less units within Pacman</span>
+<span class="fc" id="L36">            setClydeTargetNode();</span>
+        } else {
+<span class="fc" id="L38">            scatter();</span>
+        }
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * This method will set Clyde's target destination. In this case, Blinky will always target Pacman's position.
+    */
+    public void setClydeTargetNode() {
+<span class="fc" id="L46">        targetNode = new PVector(waka.getPos().x, waka.getPos().y); //need to set an initial target so that the show() method does not refer to an empty target value</span>
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * This method will influence the ghosts to move into scatter mode. This method will simply set the Ghost's new target node to their respective scatter corner. 
+     * For Clyde specifically, he will target the bottom left corner.
+    */
+    public void scatter() {
+<span class="fc" id="L54">        targetNode = map[map.length - 1][0].getPos();</span>
+<span class="fc" id="L55">    }</span>
+
+    /**
+     * This method will update Clyde's current position using a &quot;velocity&quot;, determined through a series of checks made by a bunch of other methods located in this method. 
+     * he most important method used for this function to work is checkDirection().
+    */
+    @Override
+    public void move() {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (!frightened) {</span>
+<span class="fc" id="L64">            checkDirection();</span>
+        } else {
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            if (!completeBackwards) {</span>
+<span class="fc" id="L67">                vel.mult(-1);</span>
+<span class="fc" id="L68">                completeBackwards = true;</span>
+            }
+<span class="fc" id="L70">            runAway();</span>
+        }
+        
+<span class="fc" id="L73">        pos.add(vel);</span>
+<span class="fc" id="L74">    }</span>
+
+    /**
+     * This method helps Clyde makes decision relative to its target node. It uses Euclidean distance as a heuristic and sorts all possible decisions (neighbouring Tiles - 
+     * possible moves) using the heuristic to obtain the shortest (yet valid (as Ghosts cannot move backwards)) decision; this method works with scatter().
+     * 
+     * Note that Clyde, when found to have a heuristic score of less than 8 units close to Pacman, will cause Clyde to transition into scatter() mode (a personality trait of 
+     * the ghost).
+    */
+    @Override
+    public void chooseShortestDecision() {
+<span class="fc" id="L85">        Tile intersection = map[(int) pos.y][(int) pos.x];</span>
+<span class="fc" id="L86">        LinkedList&lt;Tile&gt; sortedList = new LinkedList&lt;&gt;();</span>
+
+        //set the hCost in relation to targetNode
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        for (Tile node: intersection.getPossibleTurns()) {</span>
+<span class="fc" id="L90">            node.setHCost(targetNode);</span>
+<span class="fc" id="L91">            sortedList.add(node);</span>
+<span class="fc" id="L92">        }</span>
+
+<span class="fc" id="L94">        sortedList.sort(Comparator.comparing(Tile::getHCost)); //sort the list by hCost</span>
+<span class="fc" id="L95">        PVector turnTo = new PVector(vel.x, vel.y);</span>
+
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        for (Tile node : sortedList) {</span>
+<span class="fc bfc" id="L98" title="All 4 branches covered.">            if ((node.getPos().x - pos.x) + vel.x*16/speed == 0 &amp;&amp; (node.getPos().y - pos.y) + vel.y*16/speed == 0) {</span>
+<span class="fc" id="L99">                continue;</span>
+            }
+
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            if (node.getHCost() &lt; 8) { //for clyde, check is we are too close to Pacman (8 units)</span>
+<span class="fc" id="L103">                ignorantMode = true;</span>
+            } else {
+<span class="fc" id="L105">                ignorantMode = false;</span>
+            }
+
+<span class="fc" id="L108">            turnTo = new PVector(node.getPos().x - pos.x, node.getPos().y - pos.y); //use the first node which has low hCost and complies with backwards rule</span>
+<span class="fc" id="L109">            break;</span>
+        }
+
+<span class="fc" id="L112">        vel = new PVector(turnTo.x/16f * speed, turnTo.y/16f * speed);</span>
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * A method to show Clyde's target destination; this is only used for debug mode.
+    */
+    @Override
+    public void drawTarget() {
+<span class="fc" id="L120">        app.strokeWeight(2);</span>
+<span class="fc" id="L121">        app.stroke(255,69,0);</span>
+
+<span class="fc" id="L123">        app.line(pos.x*16 + 8, pos.y*16 + 8, targetNode.x*16 + 8, targetNode.y*16 + 8);</span>
+<span class="fc" id="L124">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

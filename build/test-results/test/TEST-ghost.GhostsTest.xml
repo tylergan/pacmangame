@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ghost.GhostsTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2020-11-22T12:24:28" hostname="tylers-mbp.internal.usyd.edu.au" time="17.571">
+  <properties/>
+  <testcase name="testGetInkyPos()" classname="ghost.GhostsTest" time="0.003"/>
+  <testcase name="clydeMoveTarget()" classname="ghost.GhostsTest" time="1.502"/>
+  <testcase name="testGetClydePos()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="testGetClydeVel()" classname="ghost.GhostsTest" time="0.002"/>
+  <testcase name="pinkyConstructorTest()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="inkyMoveTarget()" classname="ghost.GhostsTest" time="0.002"/>
+  <testcase name="testPinkyOutofBoundsTarget()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="inkyScatter()" classname="ghost.GhostsTest" time="3.002"/>
+  <testcase name="clydeScatter()" classname="ghost.GhostsTest" time="3.002"/>
+  <testcase name="blinkyConstructorTest()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="testgetInkyVel()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="clydeConstructorTest()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="blinkyMoveTarget()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="testInkyOutofBoundsTarget()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="pinkyMoveTarget()" classname="ghost.GhostsTest" time="0.002"/>
+  <testcase name="testGetPinkyPos()" classname="ghost.GhostsTest" time="0.002"/>
+  <testcase name="testGetPinkyVel()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="testRunAway()" classname="ghost.GhostsTest" time="4.037"/>
+  <testcase name="testGetBlinkyPos()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="testGetBlinkyVel()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="pinkyScatter()" classname="ghost.GhostsTest" time="3.002"/>
+  <testcase name="inkyConstructorTest()" classname="ghost.GhostsTest" time="0.001"/>
+  <testcase name="blinkyScatter()" classname="ghost.GhostsTest" time="3.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

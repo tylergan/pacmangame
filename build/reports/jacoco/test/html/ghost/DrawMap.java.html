@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DrawMap.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Refined_Assignment</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">DrawMap.java</span></div><h1>DrawMap.java</h1><pre class="source lang-java linenums">/*
+    Author: Tyler Gan
+    Date: 21/11/20
+    INFO1113 Assignment 2: Waka Waka
+
+    This is the DrawMap class, which is what draws all of the objects onto the canvas.
+*/
+
+package ghost;
+
+import java.util.List;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+
+public class DrawMap {
+    private PApplet app;
+    private Tile[][] map;
+
+    private PImage fruitImg;
+    private PImage superFruitImg;
+    private PImage anitiPowerImg;
+
+    private PImage blinkyImg, pinkyImg, inkyImg, clydeImg;
+<span class="fc" id="L25">    PImage[] wallImgs = new PImage[6], wakaImgs = new PImage[5], frightenedImg = new PImage[2];</span>
+    
+    /**
+     * Contructor for the DrawMap class.
+     * @param app the app of the object.
+     * @param map a matrix.
+     */
+<span class="fc" id="L32">    public DrawMap(PApplet app, Tile[][] map) {</span>
+<span class="fc" id="L33">        this.app = app;</span>
+<span class="fc" id="L34">        this.map = map;</span>
+<span class="fc" id="L35">    }</span>
+
+    /**
+     * This method will load images to specific variables and is used in the setup of the app.
+     */
+    public void loadTileImgs() {
+<span class="fc" id="L41">        fruitImg = app.loadImage(&quot;src/main/resources/fruit.png&quot;);</span>
+<span class="fc" id="L42">        superFruitImg = app.loadImage(&quot;src/main/resources/superFruit.png&quot;);</span>
+<span class="fc" id="L43">        anitiPowerImg = app.loadImage(&quot;src/main/resources/antiPower.png&quot;);</span>
+
+<span class="fc" id="L45">        wallImgs[0] = app.loadImage(&quot;src/main/resources/horizontal.png&quot;); wallImgs[1] = app.loadImage(&quot;src/main/resources/vertical.png&quot;);</span>
+<span class="fc" id="L46">        wallImgs[2] = app.loadImage(&quot;src/main/resources/upLeft.png&quot;); wallImgs[3] = app.loadImage(&quot;src/main/resources/upRight.png&quot;);</span>
+<span class="fc" id="L47">        wallImgs[4] = app.loadImage(&quot;src/main/resources/downLeft.png&quot;); wallImgs[5] = app.loadImage(&quot;src/main/resources/downRight.png&quot;);</span>
+
+<span class="fc" id="L49">        GameObject.gameOverImg = app.loadImage(&quot;src/main/resources/gameover - Copy.png&quot;);</span>
+<span class="fc" id="L50">        GameObject.font = app.createFont(&quot;src/main/resources/PressStart2P-Regular.ttf&quot;, 10);</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * This method will load Pacman images to specific variables and is used in the setup of the app.
+     * @param waka a Pacman object.
+     */
+    public void loadPacmanImgs(Pacman waka) {
+<span class="fc" id="L58">        wakaImgs[0] = app.loadImage(&quot;src/main/resources/playerClosed.png&quot;);</span>
+<span class="fc" id="L59">        wakaImgs[1] = app.loadImage(&quot;src/main/resources/playerUp.png&quot;);</span>
+<span class="fc" id="L60">        wakaImgs[2] = app.loadImage(&quot;src/main/resources/playerDown.png&quot;);</span>
+<span class="fc" id="L61">        wakaImgs[3] = app.loadImage(&quot;src/main/resources/playerRight.png&quot;);</span>
+<span class="fc" id="L62">        wakaImgs[4] = app.loadImage(&quot;src/main/resources/playerLeft.png&quot;);</span>
+
+<span class="fc" id="L64">        waka.setImg(wakaImgs);</span>
+<span class="fc" id="L65">    }</span>
+
+    /**
+     * This method will load Ghost images to specific variables and is used in the setup of the app.
+     * @param ghosts a List of Ghost objects.
+     */
+    public void loadGhostImgs(List&lt;GameObject&gt; ghosts) {
+<span class="fc" id="L72">        blinkyImg = app.loadImage(&quot;src/main/resources/chaser.png&quot;);</span>
+<span class="fc" id="L73">        pinkyImg = app.loadImage(&quot;src/main/resources/ambusher.png&quot;);</span>
+<span class="fc" id="L74">        inkyImg = app.loadImage(&quot;src/main/resources/whim.png&quot;);</span>
+<span class="fc" id="L75">        clydeImg = app.loadImage(&quot;src/main/resources/ignorant.png&quot;);</span>
+<span class="fc" id="L76">        frightenedImg[0] = app.loadImage(&quot;src/main/resources/frightened.png&quot;);</span>
+<span class="fc" id="L77">        frightenedImg[1] = app.loadImage(&quot;src/main/resources/frightened2.png&quot;);</span>
+
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        for (GameObject ghost : ghosts) {</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            if (ghost instanceof GhostBlinky) {</span>
+<span class="fc" id="L81">                ghost.setImg(blinkyImg);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">            } else if (ghost instanceof GhostPinky) {</span>
+<span class="fc" id="L83">                ghost.setImg(pinkyImg);</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            } else if (ghost instanceof GhostInky) {</span>
+<span class="fc" id="L85">                ghost.setImg(inkyImg);</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">            } else if (ghost instanceof GhostClyde) {</span>
+<span class="fc" id="L87">                ghost.setImg(clydeImg);</span>
+            }
+<span class="fc" id="L89">        }</span>
+
+<span class="fc" id="L91">        GameObject.frightenedImg = frightenedImg;</span>
+<span class="fc" id="L92">    }</span>
+
+    /**
+     * This method will draw out the Tiles defined by the given map configuration which uses the drawTiles(tile) method.
+     */
+    public void drawLayout() {
+<span class="fc" id="L98">        app.background(0, 0, 0);</span>
+
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        for (int yCoor = 0; yCoor &lt; map.length; yCoor++) {</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">            for (int xCoor = 0; xCoor &lt; map[yCoor].length; xCoor++) {</span>
+<span class="fc" id="L102">                Tile tile = map[yCoor][xCoor];</span>
+
+<span class="fc bfc" id="L104" title="All 2 branches covered.">                if (tile.isWall()) {</span>
+<span class="fc" id="L105">                    tile.setImg(wallImgs[tile.getWallState()]);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">                } else if (tile.isFruit()) {</span>
+<span class="fc" id="L107">                    tile.setImg(fruitImg);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">                } else if (tile.isSuperFruit()) {</span>
+<span class="fc" id="L109">                    tile.setImg(superFruitImg);</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">                } else if (tile.isAntiPower()){</span>
+<span class="fc" id="L111">                    tile.setImg(anitiPowerImg);</span>
+                }
+
+<span class="fc" id="L114">                tile.setSuperFruitState();</span>
+
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                if (!tile.isEmpty()) {</span>
+<span class="fc bfc" id="L117" title="All 6 branches covered.">                    if ((tile.isSuperFruit() || tile.isAntiPower()) &amp;&amp; tile.getSuperFruitState() == 1) {</span>
+<span class="fc" id="L118">                        continue;</span>
+                    }
+<span class="fc" id="L120">                    drawTiles(tile);</span>
+                }
+            }
+        }
+<span class="fc" id="L124">    }</span>
+
+    /**
+     * This method draws the tiles.
+     * @param tile the Tile object.
+     */
+    public void drawTiles(Tile tile) {
+<span class="fc" id="L131">        app.image(tile.getImg(), tile.getPos().x * 16, tile.getPos().y * 16);</span>
+<span class="fc" id="L132">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

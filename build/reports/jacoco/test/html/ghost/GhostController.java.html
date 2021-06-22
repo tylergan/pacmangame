@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GhostController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Refined_Assignment</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">GhostController.java</span></div><h1>GhostController.java</h1><pre class="source lang-java linenums">/*
+    Author: Tyler Gan
+    Date: 21/11/20
+    INFO1113 Assignment 2: Waka Waka
+
+    This is the GhostController class, where it calls upon all of the methods used by the ghosts at a single time.
+*/
+
+package ghost;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class GhostController extends GameObject {
+    List&lt;GameObject&gt; ghosts;
+
+    /**
+     * Constructor of the GhostController class.
+     */
+<span class="fc" id="L20">    public GhostController() {</span>
+<span class="fc" id="L21">    }</span>
+
+    /**
+     * This method is a setter for the ghosts variable in the GhostController class. It also sets Blinky-Inky partners.
+     * @param ghosts a List of ghosts
+     */
+    public void setGhosts(List&lt;GameObject&gt; ghosts) {
+<span class="fc" id="L28">        this.ghosts = ghosts;</span>
+<span class="fc" id="L29">        checkInkyBlinky();</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * This method will obtain a bunch of Inkies and Blinkies from the List of ghosts and will pair the two together.
+     */
+    public void checkInkyBlinky() {
+<span class="fc" id="L36">        List&lt;GhostInky&gt; inkies = ghosts.stream().filter(o -&gt; (o instanceof GhostInky)).map(o -&gt; (GhostInky) o).collect(Collectors.toList());</span>
+<span class="fc" id="L37">        List &lt;GhostBlinky&gt; blinkies = ghosts.stream().filter(o -&gt; (o instanceof GhostBlinky)).map(o -&gt; (GhostBlinky) o).collect(Collectors.toList());</span>
+
+<span class="pc bpc" id="L39" title="1 of 4 branches missed.">        if (inkies.size() == 0 || blinkies.size() == 0) {return;}</span>
+
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        for (int i = 0, j = 0; i &lt; inkies.size(); i++, j++) {</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">            if (j == blinkies.size()) {</span>
+<span class="fc" id="L43">                j = 0;</span>
+            }
+
+<span class="fc" id="L46">            inkies.get(i).setBlinkyPartner(blinkies.get(j));</span>
+        }
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * This method will move all Ghosts, switching it between scatter and chase mode.
+     */
+    public void move() {
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (modeTimer == Long.MAX_VALUE) {</span>
+<span class="fc" id="L55">            modeTimer = System.currentTimeMillis();</span>
+
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (modeIndex % 2 == 0) {scatterMode = true;} </span>
+<span class="fc" id="L58">            else {scatterMode = false;}</span>
+
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        } else if (System.currentTimeMillis() - modeTimer &gt;= modeLengths.get(modeIndex) * 1000) {</span>
+<span class="fc" id="L61">            changeModeIndex();</span>
+<span class="fc" id="L62">            modeTimer = Long.MAX_VALUE;</span>
+        }
+
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        for (GameObject ghost : ghosts) {</span>
+<span class="fc" id="L66">            ghost.move();</span>
+<span class="fc" id="L67">        }</span>
+<span class="fc" id="L68">    }</span>
+
+    /**
+     * This method swtiches between different modes (scatter and chase). The duration of each mode is given within a List, which this method is used to index through that List.
+     */
+    public void changeModeIndex() {
+<span class="fc" id="L74">        modeIndex++;</span>
+
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (modeIndex &gt;= modeLengths.size()) {</span>
+<span class="fc" id="L77">            modeIndex = 0;</span>
+        }
+<span class="fc" id="L79">    }</span>
+
+    /**
+     * This method will draw out all ghosts in the List.
+     */
+    public void draw() {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        for (GameObject ghost : ghosts) {</span>
+<span class="fc" id="L86">            ghost.drawGhost();</span>
+<span class="fc" id="L87">        }</span>
+<span class="fc" id="L88">    }</span>
+
+    /**
+     * This method will draw out the target of all Ghosts.
+     */
+    public void drawTarget() {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        for (GameObject ghost : ghosts) {</span>
+
+<span class="pc bpc" id="L96" title="2 of 4 branches missed.">            if (!ghost.isDead() &amp;&amp; !GameObject.frightened) {</span>
+<span class="fc" id="L97">                ghost.drawTarget();</span>
+            }
+<span class="fc" id="L99">        }</span>
+<span class="fc" id="L100">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

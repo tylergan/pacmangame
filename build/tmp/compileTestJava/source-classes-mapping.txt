@@ -1,0 +1,12 @@
+ghost/PacmanTest.java
+ ghost.PacmanTest
+ghost/MapParseTest.java
+ ghost.MapParseTest
+ghost/GhostControllerTest.java
+ ghost.GhostControllerTest
+ghost/GameObjectTest.java
+ ghost.GameObjectTest
+ghost/AppTest.java
+ ghost.AppTest
+ghost/GhostsTest.java
+ ghost.GhostsTest

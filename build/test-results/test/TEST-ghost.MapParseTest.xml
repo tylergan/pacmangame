@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ghost.MapParseTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-11-22T12:24:28" hostname="tylers-mbp.internal.usyd.edu.au" time="0.003">
+  <properties/>
+  <testcase name="testGetFruitCount()" classname="ghost.MapParseTest" time="0.001"/>
+  <testcase name="testGetGhosts()" classname="ghost.MapParseTest" time="0.001"/>
+  <testcase name="testGetMap()" classname="ghost.MapParseTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

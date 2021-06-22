@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GhostPinky.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Refined_Assignment</a> &gt; <a href="index.source.html" class="el_package">ghost</a> &gt; <span class="el_source">GhostPinky.java</span></div><h1>GhostPinky.java</h1><pre class="source lang-java linenums">/*
+    Author: Tyler Gan
+    Date: 21/11/20
+    INFO1113 Assignment 2: Waka Waka
+
+    This is the GhostPinky class, where methods related to ambusher are stored.
+*/
+
+
+package ghost;
+
+import java.util.Comparator;
+import java.util.LinkedList;
+
+import processing.core.PVector;
+
+public class GhostPinky extends GameObject{
+    private Pacman waka;
+    private PVector targetNode;
+<span class="fc" id="L20">    private boolean completeBackwards = false;</span>
+    
+    /**
+     * Constructor of the Pinky class.
+     * @param waka a Pacman object.
+    */
+<span class="fc" id="L26">    public GhostPinky(Pacman waka) {</span>
+<span class="fc" id="L27">        this.waka = waka;</span>
+<span class="fc" id="L28">    }</span>
+
+    /**
+     * This method is an overrided method that set Pinky's target node depending on the mode.
+     */
+    @Override
+    public void setTargetNode() {
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (!scatterMode) {</span>
+<span class="fc" id="L36">            setPinkyTargetNode();</span>
+        } else {
+<span class="fc" id="L38">            scatter();</span>
+        }
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * This method will set Pinky's target destination. Pinky looks two tiles ahead of Pacman.
+    */
+    public void setPinkyTargetNode() {
+<span class="fc" id="L46">        PVector wakaDirec = new PVector(waka.getVel().x*16*4, waka.getVel().y*16*4);</span>
+<span class="fc" id="L47">        targetNode = new PVector(waka.getPos().x + wakaDirec.x, waka.getPos().y + wakaDirec.y); //set initial targetNode so that the show() method is not referring to an empty targetNode (null)</span>
+
+        //ensure that the ghost does not target an out of bounds location (important for debug mode lines)
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (targetNode.x &lt; 1) {</span>
+<span class="fc" id="L51">            targetNode = new PVector(1, targetNode.y);</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        } else if (targetNode.x &gt; 26) {</span>
+<span class="fc" id="L53">                targetNode = new PVector(26, targetNode.y);</span>
+        }
+
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (targetNode.y &lt; 3) {</span>
+<span class="fc" id="L57">            targetNode = new PVector(targetNode.x, 3);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        } else if (targetNode.y &gt; 32) {</span>
+<span class="fc" id="L59">            targetNode = new PVector(targetNode.x, 32);</span>
+        }
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * This method will influence the ghosts to move into scatter mode. This method will simply set the Ghost's new target node to their respective scatter corner. 
+     * For Pinky specifically, he will target the top right corner.
+    */
+    public void scatter() {
+<span class="fc" id="L68">        targetNode = map[0][map[0].length - 1].getPos();</span>
+<span class="fc" id="L69">    }</span>
+
+
+
+    /**
+     * This method will update Pinky's current position using a &quot;velocity&quot;, determined through a series of checks made by a bunch of other methods located in this method. 
+     * he most important method used for this function to work is checkDirection().
+    */
+    @Override
+    public void move() {
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (!frightened) {</span>
+<span class="fc" id="L80">            checkDirection();</span>
+        } else {
+<span class="fc bfc" id="L82" title="All 2 branches covered.">            if (!completeBackwards) {</span>
+<span class="fc" id="L83">                vel.mult(-1);</span>
+<span class="fc" id="L84">                completeBackwards = true;</span>
+            }
+<span class="fc" id="L86">            runAway();</span>
+        }
+
+<span class="fc" id="L89">        pos.add(vel);</span>
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * This method is the controller of the movement for Pinky. It will help Pinky make decisions when approaching a wall as well as make decisions when targeting Pacman. 
+     * It works with multiple other methods: setPinkyTargetMode(), scatter() and chooseShortestDecision().
+     * Additional getters and setters from other classes were used to obtain needed information, such as a Tile's neighbours, for example.
+    */
+    @Override
+    public void chooseShortestDecision() {
+        /*
+            This method helps Inky makes decision relative to its target node. It uses Euclidean distance as a heuristic 
+            and sorts all possible decisions (neighbouring Tiles - possible moves) using the heuristic to obtain the 
+            shortest (yet valid (as Ghosts cannot move backwards)) decision.
+        */
+<span class="fc" id="L104">        Tile intersection = map[(int) pos.y][(int) pos.x];</span>
+<span class="fc" id="L105">        LinkedList&lt;Tile&gt; sortedList = new LinkedList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        for (Tile node: intersection.getPossibleTurns()) {</span>
+<span class="fc" id="L108">            node.setHCost(targetNode);</span>
+<span class="fc" id="L109">            sortedList.add(node);</span>
+<span class="fc" id="L110">        }</span>
+
+<span class="fc" id="L112">        sortedList.sort(Comparator.comparing(Tile::getHCost)); //sort the list by hCost</span>
+<span class="fc" id="L113">        PVector turnTo = new PVector(vel.x, vel.y);</span>
+
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">        for (Tile node : sortedList) {</span>
+<span class="fc bfc" id="L116" title="All 4 branches covered.">            if ((node.getPos().x - pos.x) + vel.x*16/speed == 0 &amp;&amp; (node.getPos().y - pos.y) + vel.y*16/speed == 0) {</span>
+<span class="fc" id="L117">                continue;</span>
+            }
+<span class="fc" id="L119">            turnTo = new PVector(node.getPos().x - pos.x, node.getPos().y - pos.y); //use the first node which has low hCost and complies with backwards rule</span>
+<span class="fc" id="L120">            break;</span>
+        }
+
+<span class="fc" id="L123">        vel = new PVector(turnTo.x/16f * speed, turnTo.y/16f * speed);</span>
+<span class="fc" id="L124">    }</span>
+
+    /**
+     * A method to show Inky's target destination; this is only used for debug mode.
+    */
+    @Override
+    public void drawTarget() {
+<span class="fc" id="L131">        app.strokeWeight(2);</span>
+<span class="fc" id="L132">        app.stroke(255,192,203);</span>
+
+<span class="fc" id="L134">        app.line(pos.x*16 + 8, pos.y*16 + 8, targetNode.x*16 + 8, targetNode.y*16 + 8);</span>
+
+<span class="fc" id="L136">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

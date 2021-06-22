@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ghost.GameObjectTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2020-11-22T12:24:24" hostname="tylers-mbp.internal.usyd.edu.au" time="2.097">
+  <properties/>
+  <testcase name="testDrawLoss()" classname="ghost.GameObjectTest" time="1.05"/>
+  <testcase name="testDrawWin()" classname="ghost.GameObjectTest" time="1.047"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ghost.GhostControllerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2020-11-22T12:24:23" hostname="tylers-mbp.internal.usyd.edu.au" time="1.019">
+  <properties/>
+  <testcase name="testMove()" classname="ghost.GhostControllerTest" time="1.006"/>
+  <testcase name="testSetGhosts()" classname="ghost.GhostControllerTest" time="0.002"/>
+  <testcase name="testInkyLessBlinky()" classname="ghost.GhostControllerTest" time="0.002"/>
+  <testcase name="changeModeIndex()" classname="ghost.GhostControllerTest" time="0.004"/>
+  <testcase name="testConstructor()" classname="ghost.GhostControllerTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
